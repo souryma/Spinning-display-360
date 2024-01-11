@@ -113,6 +113,9 @@ char Display_String2[] = "DISPLAY ";
 char Display_String3[] = "DUBUC~    ";
 unsigned long stop = 0;
 
+char colors[] = {'C', 'Y', 'G', 'W', 'O', 'R'};
+char current_color = 'R';
+
 #include "FastLED.h"
 
 byte bright = 250;  // luminosité des LEDs
@@ -124,7 +127,29 @@ CRGB leds[NUM_LEDS];
 
 void SwitchLed(int ledNb, bool value) {
   if (value) {
-    leds[ledNb] = CRGB::HotPink;
+    leds[ledNb] = CRGB::Cyan;
+  } else {
+    leds[ledNb] = CRGB::Black;
+  }
+}
+
+void SwitchLedColor(int ledNb, bool value, char color) {
+  if (value) {
+    switch (color) {
+    case 'C':leds[ledNb] = CRGB::Cyan;
+    break;
+    case 'R':leds[ledNb] = CRGB::Red;
+    break;
+    case 'G':leds[ledNb] = CRGB::Green;
+    break;
+    case 'W':leds[ledNb] = CRGB::White;
+    break;
+    case 'Y':leds[ledNb] = CRGB::Yellow;
+    break;
+    case 'O':leds[ledNb] = CRGB::Orange;
+    break;
+    }
+    
   } else {
     leds[ledNb] = CRGB::Black;
   }
@@ -163,7 +188,7 @@ void setup() {
   //FastLED.addLeds<WS2812, PIN, GRB>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
 
   // 144 leds strip
-  FastLED.addLeds<APA102, PIN, CLOCK_PIN, BGR>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+  FastLED.addLeds<APA102, PIN, CLOCK_PIN, BGR>(leds, NUM_LEDS);
 
   FastLED.setBrightness(bright);
   pinMode(INPUT_PIN, INPUT);
@@ -189,52 +214,65 @@ bool GreaterThanInt(int A, int B) {
   return A > B;
 }
 
+int color_id = 0;
+
 void loop() {
 
-  while (digitalRead(INPUT_PIN) != 0) {
-    // Le capteur ne detecte rien
-  }
+  // while (digitalRead(INPUT_PIN) != 0) {
+  //   // Le capteur ne detecte rien
+  // }
 
   //anim();
 
-  // switch on all leds
-  // for (int i = 0; i < 144; i++) {
-  //   SwitchLed(i, true);
-  //   FastLED.setBrightness(50);
-  //   FastLED.show();
-  // }
+  Serial.println(current_color);
+  Serial.println(color_id);
+
+  //switch on all leds
+  for (int i = 0; i < 70; i++) {
+    SwitchLedColor(i, true, current_color);
+    FastLED.setBrightness(50);
+    FastLED.show();
+
+    
+  }
+  delay(letterSpacing);
+  current_color = colors[color_id];
+  color_id = color_id + 1;
+  if (color_id > 5) {
+    color_id = 0;
+  }
 
   // le capteur a détecté quelque chose
 
   float temp = millis() - stop;
 
-  //if (millis() - stop < 3000) {
-  if (GreaterThanFloat(3000, temp) == true) {
-    state = 1;
-  } else {
-    if (GreaterThanFloat(6000, temp) == true) {
-      state = 2;
-    } else {
-      state = 3;
-    }
-  }
+  // //if (millis() - stop < 3000) {
+  // if (GreaterThanFloat(3000, temp) == true) {
+  //   state = 1;
+  // } else {
+  //   if (GreaterThanFloat(6000, temp) == true) {
+  //     state = 2;
+  //   } else {
+  //     state = 3;
+  //   }
+  // }
 
-  if (GreaterThanFloat(temp, 9000) == true) {
-    stop = millis();
-  }
+  // if (GreaterThanFloat(temp, 9000) == true) {
+  //   stop = millis();
+  // }
 
-  for (int a = sizeof(Display_String) - 1; a > -1; a--) {
-    if (CompareInts(state, 1) == true) {
-      PRINT_STRING(Display_String[a]);
-    } else {
-      if (CompareInts(state, 2) == true) {
-        PRINT_STRING(Display_String2[a]);
+  // for (int a = sizeof(Display_String) - 1; a > -1; a--) {
+  //   if (CompareInts(state, 1) == true) {
+  //     PRINT_STRING(Display_String[a]);
+  //   } else {
+  //     if (CompareInts(state, 2) == true) {
+  //       PRINT_STRING(Display_String2[a]);
 
-      } else {
-        PRINT_STRING(Display_String3[a]);
-      }
-    }
-  }
+  //     } else {
+  //       PRINT_STRING(Display_String3[a]);
+  //     }
+  //   }
+  // }
 }
 
 void PRINT_STRING(char data) {
