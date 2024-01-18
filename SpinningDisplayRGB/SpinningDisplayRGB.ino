@@ -104,8 +104,6 @@ const unsigned char CUSTOM_CHAR[95][7] = {
   { 0xe, 0x1f, 0x3f, 0x7e, 0x3f, 0x1f, 0xe },    // <3 0x7e 126
 };
 
-
-
 char Display_String[] = "IEM P8~";
 
 char colors[] = { 'C', 'Y', 'G', 'W', 'O', 'R' };
@@ -115,12 +113,14 @@ char current_color = 'R';
 
 byte bright = 250;  // luminosité des LEDs
 
-int brightness = 20;
+int brightness = 80;
 
 #define NUM_LEDS 70  // nombre de LEDs
 #define PIN 4        // port de connexion ws2812b
 #define CLOCK_PIN 6
 CRGB leds[NUM_LEDS];
+
+char color_rainbow[12] = { 'D', 'Z', 'I', 'X', 'T', 'U', 'H', 'P', 'M', 'L', 'K', 'J' };
 
 void SwitchLed(int ledNb, bool value) {
   if (value == true) {
@@ -151,6 +151,42 @@ void SwitchLedColor(int ledNb, bool value, char color) {
       case 'O':
         leds[ledNb] = CRGB::Orange;
         break;
+      case 'D':
+        leds[ledNb] = CRGB::DarkRed;
+        break;
+      case 'Z':
+        leds[ledNb] = CRGB::FireBrick;
+        break;
+      case 'I':
+        leds[ledNb] = CRGB::OrangeRed;
+        break;
+      case 'X':
+        leds[ledNb] = CRGB::Orange;
+        break;
+      case 'T':
+        leds[ledNb] = CRGB::Gold;
+        break;
+      case 'U':
+        leds[ledNb] = CRGB::GreenYellow;
+        break;
+      case 'H':
+        leds[ledNb] = CRGB::LawnGreen;
+        break;
+      case 'P':
+        leds[ledNb] = CRGB::Green;
+        break;
+      case 'M':
+        leds[ledNb] = CRGB::SpringGreen;
+        break;
+      case 'L':
+        leds[ledNb] = CRGB::MediumTurquoise;
+        break;
+      case 'K':
+        leds[ledNb] = CRGB::MidnightBlue;
+        break;
+      case 'J':
+        leds[ledNb] = CRGB::Purple;
+        break;
     }
 
   } else {
@@ -170,24 +206,19 @@ void setup() {
   FastLED.setBrightness(brightness);
   pinMode(INPUT_PIN, INPUT);
 
-  if (init_bool) {
-    //switch on all leds
-    for (int i = 0; i < 70; i++) {
-      SwitchLedColor(i, true, 'G');
-    }
+  // for (int i = 0; i < 70; i++) {
+  //   SwitchLedColor(i, true, 'G');
+  // }
 
-    // Switch off text leds
-    SwitchLed(13, false);
-    SwitchLed(14, false);
-    SwitchLed(15, false);
-    SwitchLed(16, false);
-    SwitchLed(17, false);
-    SwitchLed(18, false);
-    SwitchLed(19, false);
-    SwitchLed(20, false);
-
-    init_bool = true;
-  }
+  // Switch off text leds
+  SwitchLed(13, false);
+  SwitchLed(14, false);
+  SwitchLed(15, false);
+  SwitchLed(16, false);
+  SwitchLed(17, false);
+  SwitchLed(18, false);
+  SwitchLed(19, false);
+  SwitchLed(20, false);
 }
 
 bool CompareInts(int A, int B) {
@@ -199,7 +230,7 @@ bool GreaterThanInt(int A, int B) {
 }
 
 bool ModuloTen(int A) {
-  return A % 10 == 0;
+  return A % 2 == 0;
 }
 
 int loop_number = 0;
@@ -219,10 +250,10 @@ void anim() {
 
     if (!CompareInts(i, 49) && !CompareInts(i, 50) && !CompareInts(i, 51) && !CompareInts(i, 52) && !CompareInts(i, 53) && !CompareInts(i, 54) && !CompareInts(i, 55) && !CompareInts(i, 56) && !CompareInts(i, 20) && !CompareInts(i, 13) && !CompareInts(i, 14) && !CompareInts(i, 15) && !CompareInts(i, 16) && !CompareInts(i, 17) && !CompareInts(i, 18) && !CompareInts(i, 19) && !CompareInts(i, 21) && !CompareInts(i, 12) && !CompareInts(i, 48) && !CompareInts(i, 57)) {
       if (ModuloTen(loop_number) == true) {
-        SwitchLedColor(count1 - increment, true, 'Y');
-        SwitchLedColor(count2 + increment, true, 'Y');
-        SwitchLedColor(count3 - increment, true, 'Y');
-        SwitchLedColor(count4 + increment, true, 'Y');
+        SwitchLedColor(count1 - increment, true, color_rainbow[increment]);
+        SwitchLedColor(count2 + increment, true, color_rainbow[increment]);
+        SwitchLedColor(count3 - increment, true, color_rainbow[increment]);
+        SwitchLedColor(count4 + increment, true, color_rainbow[increment]);
         is_modulo = true;
       }
     }
@@ -237,7 +268,6 @@ void anim() {
     }
   }
 }
-
 
 void loop() {
 
