@@ -217,7 +217,7 @@ void anim() {
       SwitchLedColor(i, true, 'W');
     }
 
-    if (CompareInts(i, 49) == true && i != 50 && i != 51 && i != 52 && i != 53 && i != 54 && i != 55 && i != 56 && i != 20 && i != 13 && i != 14 && i != 15 && i != 16 && i != 17 && i != 18 && i != 19 && i != 21 && i != 12 && i != 48 && i != 57) {
+    if (!CompareInts(i, 49) && !CompareInts(i, 50) && !CompareInts(i, 51) && !CompareInts(i, 52) && !CompareInts(i, 53) && !CompareInts(i, 54) && !CompareInts(i, 55) && !CompareInts(i, 56) && !CompareInts(i, 20) && !CompareInts(i, 13) && !CompareInts(i, 14) && !CompareInts(i, 15) && !CompareInts(i, 16) && !CompareInts(i, 17) && !CompareInts(i, 18) && !CompareInts(i, 19) && !CompareInts(i, 21) && !CompareInts(i, 12) && !CompareInts(i, 48) && !CompareInts(i, 57)) {
       if (ModuloTen(loop_number) == true) {
         SwitchLedColor(count1 - increment, true, 'Y');
         SwitchLedColor(count2 + increment, true, 'Y');
